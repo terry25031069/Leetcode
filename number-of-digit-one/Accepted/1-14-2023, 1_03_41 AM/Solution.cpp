@@ -1,0 +1,30 @@
+// https://leetcode.com/problems/number-of-digit-one
+
+class Solution {
+public:
+    int countDigitOne(int n) {
+        long long dp[11][10] = {1, 0, 1},  bas = 1; 
+        dp[1][1] = 1;
+        for(int j = 0; j < 11; j++){
+            for(int i = 1; i < 10; i++){
+                if(j > 1 && i == 1) dp[j][i] = dp[j-1][i] / (j-1) * j * 10;
+                else if(i != 1 || (j != 0 && j != 1)){
+                    dp[j][i] = dp[j][i-1] + dp[j][1] + (i == 2) * pow(10, j);
+                }
+            }
+        }
+        int ans = 0, t = n, ba = 0;
+        while(t){
+            if(t % 10)ans += dp[ba][t % 10];
+            t /= 10, ba++;
+        }
+        ba = 1e9;
+        while(ba){
+            if(n / ba % 10 == 1){
+                n %= ba, ans += (n + 1);
+            }
+            ba /= 10;
+        }
+        return ans;
+    }
+};
